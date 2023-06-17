@@ -65,7 +65,7 @@ final class toDoListTests: XCTestCase {
     
     func testParse2() throws {
         // test case: {"id":"345","dateOfCreation":"2023-06-14 22:52:40","isTaskComplete": false}
-        guard let path = Bundle.main.path(forResource: "test1", ofType: "json") else {return}
+        guard let path = Bundle.main.path(forResource: "test2", ofType: "json") else {return}
         let url = URL(fileURLWithPath: path)
         guard let data = try? Data(contentsOf: url) else { return }
         let dict = try? JSONSerialization.jsonObject(with: data) as? [String : Any]
@@ -75,7 +75,7 @@ final class toDoListTests: XCTestCase {
     
     func testParse3() throws {
         // test case: {"text":"do homework","dateOfCreation":"2023-06-14 22:52:40","isTaskComplete": false}
-        guard let path = Bundle.main.path(forResource: "test1", ofType: "json") else {return}
+        guard let path = Bundle.main.path(forResource: "test3", ofType: "json") else {return}
         let url = URL(fileURLWithPath: path)
         guard let data = try? Data(contentsOf: url) else { return }
         let dict = try? JSONSerialization.jsonObject(with: data) as? [String : Any]
@@ -85,7 +85,7 @@ final class toDoListTests: XCTestCase {
     
     func testParse4() throws {
         // test case: {"id":"345","text":"do homework","isTaskComplete": false}
-        guard let path = Bundle.main.path(forResource: "test1", ofType: "json") else {return}
+        guard let path = Bundle.main.path(forResource: "test4", ofType: "json") else {return}
         let url = URL(fileURLWithPath: path)
         guard let data = try? Data(contentsOf: url) else { return }
         let dict = try? JSONSerialization.jsonObject(with: data) as? [String : Any]
@@ -95,7 +95,7 @@ final class toDoListTests: XCTestCase {
     
     func testParse5() throws {
         // test case: {"id":"345","dateOfCreation":"2023-06-14 22:52:40}
-        guard let path = Bundle.main.path(forResource: "test1", ofType: "json") else {return}
+        guard let path = Bundle.main.path(forResource: "test5", ofType: "json") else {return}
         let url = URL(fileURLWithPath: path)
         guard let data = try? Data(contentsOf: url) else { return }
         let dict = try? JSONSerialization.jsonObject(with: data) as? [String : Any]
