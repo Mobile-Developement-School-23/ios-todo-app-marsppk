@@ -103,6 +103,16 @@ final class toDoListTests: XCTestCase {
         XCTAssertEqual(struc.self != nil, false, "JSON parsed incorrect")
     }
     
+    func testParse6() throws {
+        // test case: empty file
+        guard let path = Bundle.main.path(forResource: "test6", ofType: "json") else {return}
+        let url = URL(fileURLWithPath: path)
+        guard let data = try? Data(contentsOf: url) else { return }
+        let dict = try? JSONSerialization.jsonObject(with: data) as? [String : Any]
+        let struc = TodoItem.parse(json: dict)
+        XCTAssertEqual(struc.self != nil, false, "JSON parsed incorrect")
+    }
+    
     func testconvToJSON() throws {
         let dateFormatter = Formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
@@ -115,7 +125,6 @@ final class toDoListTests: XCTestCase {
         XCTAssertEqual(dict["importance"] != nil, false, "Incorrect convertation to json")
         XCTAssertEqual(dict["deadline"] != nil, false, "Incorrect convertation to json")
     }
-    
     
     // Tests for FileCache
     
@@ -135,6 +144,16 @@ final class toDoListTests: XCTestCase {
         data.loadAll(name: "test.json")
     }
     
+    func testRemove() throws {
+        let data = FileCache()
+        let dateFormatter = Formatter()
+        let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
+        let Todo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
+        data.add(item: Todo)
+        data.remove(id: "345")
+        XCTAssertEqual(data.items.count, 0, "Elements is not delete")
+    }
+    
     func testDublicateID() throws {
         let data = FileCache()
         let dateFormatter = Formatter()
@@ -144,6 +163,6 @@ final class toDoListTests: XCTestCase {
         data.add(item: Todo)
         data.add(item: Todo1)
         XCTAssertEqual(data.items.count, 1, "ID is dublicate")
-        XCTAssertEqual(data.items[0].text, "new task", "Data is not rewrite")
+        XCTAssertEqual(data.items[0].text, "new task", "Data is not rewrited")
     }
 }
