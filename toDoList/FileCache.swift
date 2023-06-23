@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FileCache {
+final class FileCache {
     private(set) var items = [TodoItem]()
     
     func add(item: TodoItem) {
@@ -32,7 +32,7 @@ class FileCache {
             dict["items"]?.append(data)
         }
         do {
-            let data = try JSONSerialization.data(withJSONObject: dict, options: [])
+            let data = try JSONSerialization.data(withJSONObject: dict, options: [.prettyPrinted])
             try data.write(to: fileUrl, options: [])
         } catch {
             print(error)
