@@ -7,8 +7,11 @@
 
 import Foundation
 
-class FileCache {
+final class FileCache {
     private(set) var items = [TodoItem]()
+    
+    
+    
     
     func add(item: TodoItem) {
         if let index = items.firstIndex(where: { $0.id == item.id }) {
