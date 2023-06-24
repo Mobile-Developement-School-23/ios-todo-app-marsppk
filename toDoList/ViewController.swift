@@ -7,14 +7,16 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate{
+class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
     
     // Init
     
-    
-    var toDoitem1: TodoItem = TodoItem(id: UUID().uuidString, text: "String", deadline: nil, importance: .usual, isTaskComplete: false, dateOfCreation: Date(), dateOfChange: nil)
+    var fileCache = FileCache()
+    var toDoitem1: TodoItem = TodoItem(id: UUID().uuidString, text: "", deadline: nil, importance: .usual, isTaskComplete: false, dateOfCreation: Date(), dateOfChange: nil)
     let separator = UIView()
     let separator1 = UIView()
+    
+    var importance = 0
         
     let scrollView: UIScrollView = {
         let sv = UIScrollView()
@@ -199,6 +201,22 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
             deleteButton.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3), for: .normal)
         }
     }
+    @IBAction func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            importance = -1
+            break
+        case 2:
+            importance = 1
+            break
+        default:
+            importance = 0
+            break
+        }
+        if textView.text != "Что надо сделать?" && textView.text != "" {
+            saveTask.textColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
+        }
+    }
     
     func setupSegmentControl() -> UISegmentedControl {
         let items = ["Картинка 1", "нет", "Картинка 2"]
@@ -211,6 +229,7 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
         segmentControl.setImage(imageLow, forSegmentAt: 0)
         segmentControl.setImage(imageImportant, forSegmentAt: 2)
         segmentControl.frame = CGRect(x: 0, y: 0, width: 150, height: 36)
+        segmentControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
         return segmentControl
     }
     
@@ -359,37 +378,17 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
         labelDate.translatesAutoresizingMaskIntoConstraints = false
         dateSelection.setSelected(tomorrowComponents, animated: true)
     }
-
     
-    override func viewDidLoad() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(labelTapped1))
-        saveTask.isUserInteractionEnabled = true
-        saveTask.addGestureRecognizer(tapGesture)
-        super.viewDidLoad()
-        background()
-        orientation()
-        
-        textView.delegate = self
-        textView.returnKeyType = .done
-        if (toDoitem1.text != ""){
-            textView.text = toDoitem1.text
-            textView.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-        }
-        
-        separator.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
-        separator.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
-        
+    @IBAction func buttonTapped(sender: UIButton){
+        fileCache.remove(id: toDoitem1.id)
+        fileCache.saveAll(name: "test1.json")
+        textView.text = ""
+        importance = 0
+        Switch.isOn = false
+        saveTask.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
+        deleteButton.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3), for: .normal)
+        scrollView.removeFromSuperview()
         let horizontalStack1 = UIStackView()
-        let segmentControl = setupSegmentControl()
-        horizontalStack1.alignment = .center
-        horizontalStack1.axis = .horizontal
-        horizontalStack1.distribution = UIStackView.Distribution.equalSpacing
-        [labelImportance, segmentControl].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            horizontalStack1.addArrangedSubview($0)
-        }
-        
-        horizontalStack1.translatesAutoresizingMaskIntoConstraints = false
         
         let horizontalStack2 = UIStackView()
         horizontalStack2.axis = .horizontal
@@ -401,18 +400,11 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
         stackWithDateAndDeadline.distribution = .fill
         stackWithDateAndDeadline.spacing = 0
         stackWithDateAndDeadline.addArrangedSubview(labelDeadline)
-        stackWithDateAndDeadline.addArrangedSubview(labelDate)
         [stackWithDateAndDeadline, Switch].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             horizontalStack2.addArrangedSubview($0)
         }
-        horizontalStack2.translatesAutoresizingMaskIntoConstraints = false
         separator1.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
-        
-        [cancelTask, labelTask, saveTask].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            horizontalStack.addArrangedSubview($0)
-        }
         
         [horizontalStack1, separator, horizontalStack2].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -426,28 +418,14 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
         
         verticalStack1.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(verticalStack1)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         
-        [horizontalStack, scrollView].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-        
-        view.addSubview(horizontalStack)
         view.addSubview(scrollView)
     
         setupConstrains()
         
         horizontalStack1.heightAnchor.constraint(equalToConstant: 54).isActive = true
         horizontalStack2.heightAnchor.constraint(equalToConstant: 54).isActive = true
-        verticalStack.leadingAnchor.constraint(equalTo: verticalStack1.leadingAnchor).isActive = true
-        NSLayoutConstraint.activate([
-            labelImportance.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
-            labelImportance.heightAnchor.constraint(equalToConstant: labelImportance.frame.height),
-            labelImportance.widthAnchor.constraint(equalToConstant: labelImportance.frame.width),
-            
-            segmentControl.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -12),
-            segmentControl.heightAnchor.constraint(equalToConstant: segmentControl.frame.height),
-            segmentControl.widthAnchor.constraint(equalToConstant: segmentControl.frame.width)
-        ])
         
         NSLayoutConstraint.activate([
             stackWithDateAndDeadline.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
@@ -455,12 +433,184 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
             Switch.heightAnchor.constraint(equalToConstant: Switch.frame.height),
             Switch.widthAnchor.constraint(equalToConstant: Switch.frame.width)
         ])
+
+    }
+
+    
+    override func viewDidLoad() {
+        fileCache.loadAll(name: "test1.json")
+        if fileCache.items.count != 0 {
+            toDoitem1 = fileCache.items[0]
+        }
+        deleteButton.addTarget(self, action: #selector(buttonTapped(sender:)), for: .touchUpInside)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(labelTapped1))
+        saveTask.isUserInteractionEnabled = true
+        saveTask.addGestureRecognizer(tapGesture)
+        super.viewDidLoad()
+        background()
+        orientation()
+        let segmentControl = setupSegmentControl()
         
-        NSLayoutConstraint.activate([
-            separator.topAnchor.constraint(equalTo: horizontalStack1.bottomAnchor),
-            separator.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
-            separator.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -16)
-        ])
+        textView.delegate = self
+        textView.returnKeyType = .done
+        if (toDoitem1.text != ""){
+            textView.text = toDoitem1.text
+            deleteButton.setTitleColor(UIColor(red: 1.0, green: 0.23, blue: 0.19, alpha: 1.0), for: .normal)
+            textView.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        }
+        if (toDoitem1.importance == .unimportant) {
+            segmentControl.selectedSegmentIndex = 0
+        }
+        if (toDoitem1.importance == .usual) {
+            segmentControl.selectedSegmentIndex = 1
+        }
+        if (toDoitem1.importance == .important) {
+            segmentControl.selectedSegmentIndex = 2
+        }
+            separator.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
+            separator.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+            
+            let horizontalStack1 = UIStackView()
+            horizontalStack1.alignment = .center
+            horizontalStack1.axis = .horizontal
+            horizontalStack1.distribution = UIStackView.Distribution.equalSpacing
+            [labelImportance, segmentControl].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                horizontalStack1.addArrangedSubview($0)
+            }
+            
+            horizontalStack1.translatesAutoresizingMaskIntoConstraints = false
+            
+            let horizontalStack2 = UIStackView()
+            horizontalStack2.axis = .horizontal
+            horizontalStack2.distribution = UIStackView.Distribution.equalSpacing
+            horizontalStack2.alignment = .center
+            
+            let stackWithDateAndDeadline = UIStackView()
+            stackWithDateAndDeadline.axis = .vertical
+            stackWithDateAndDeadline.distribution = .fill
+            stackWithDateAndDeadline.spacing = 0
+            stackWithDateAndDeadline.addArrangedSubview(labelDeadline)
+            stackWithDateAndDeadline.addArrangedSubview(labelDate)
+            [stackWithDateAndDeadline, Switch].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                horizontalStack2.addArrangedSubview($0)
+            }
+            horizontalStack2.translatesAutoresizingMaskIntoConstraints = false
+            separator1.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
+            
+            [cancelTask, labelTask, saveTask].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                horizontalStack.addArrangedSubview($0)
+            }
+            
+            [horizontalStack1, separator, horizontalStack2].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                verticalStack.addArrangedSubview($0)
+            }
+            
+            [textView, verticalStack, deleteButton].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                verticalStack1.addArrangedSubview($0)
+            }
+            
+            verticalStack1.translatesAutoresizingMaskIntoConstraints = false
+            scrollView.addSubview(verticalStack1)
+            
+            [horizontalStack, scrollView].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+            }
+            
+            view.addSubview(horizontalStack)
+            view.addSubview(scrollView)
+            
+            setupConstrains()
+            
+            horizontalStack1.heightAnchor.constraint(equalToConstant: 54).isActive = true
+            horizontalStack2.heightAnchor.constraint(equalToConstant: 54).isActive = true
+            verticalStack.leadingAnchor.constraint(equalTo: verticalStack1.leadingAnchor).isActive = true
+            NSLayoutConstraint.activate([
+                labelImportance.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
+                labelImportance.heightAnchor.constraint(equalToConstant: labelImportance.frame.height),
+                labelImportance.widthAnchor.constraint(equalToConstant: labelImportance.frame.width),
+                
+                segmentControl.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -12),
+                segmentControl.heightAnchor.constraint(equalToConstant: segmentControl.frame.height),
+                segmentControl.widthAnchor.constraint(equalToConstant: segmentControl.frame.width)
+            ])
+            
+            NSLayoutConstraint.activate([
+                stackWithDateAndDeadline.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
+                Switch.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -12),
+                Switch.heightAnchor.constraint(equalToConstant: Switch.frame.height),
+                Switch.widthAnchor.constraint(equalToConstant: Switch.frame.width)
+            ])
+            
+            NSLayoutConstraint.activate([
+                separator.topAnchor.constraint(equalTo: horizontalStack1.bottomAnchor),
+                separator.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
+                separator.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -16)
+            ])
+        if (toDoitem1.deadline != nil) {
+            Switch.isOn = true
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "ru_RU")
+            formatter.dateFormat = "dd MMMM yyyy"
+            let string_date = formatter.string(from: toDoitem1.deadline!)
+            labelDate.text = string_date
+            let horizontalStack1 = UIStackView()
+            
+            let horizontalStack2 = UIStackView()
+            horizontalStack2.axis = .horizontal
+            horizontalStack2.distribution = UIStackView.Distribution.equalSpacing
+            horizontalStack2.alignment = .center
+            
+            let stackWithDateAndDeadline = UIStackView()
+            stackWithDateAndDeadline.axis = .vertical
+            stackWithDateAndDeadline.distribution = .fill
+            stackWithDateAndDeadline.spacing = 0
+            stackWithDateAndDeadline.addArrangedSubview(labelDeadline)
+            stackWithDateAndDeadline.addArrangedSubview(labelDate)
+            
+            let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
+            
+            labelDate.isUserInteractionEnabled = true
+            labelDate.addGestureRecognizer(tapGesture1)
+            
+            [stackWithDateAndDeadline, Switch].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                horizontalStack2.addArrangedSubview($0)
+            }
+            separator1.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
+            
+            [horizontalStack1, separator, horizontalStack2].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                verticalStack.addArrangedSubview($0)
+            }
+            
+            [textView, verticalStack, deleteButton].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                verticalStack1.addArrangedSubview($0)
+            }
+            
+            verticalStack1.translatesAutoresizingMaskIntoConstraints = false
+            scrollView.addSubview(verticalStack1)
+            scrollView.translatesAutoresizingMaskIntoConstraints = false
+            
+            view.addSubview(scrollView)
+        
+            setupConstrains()
+            
+            horizontalStack1.heightAnchor.constraint(equalToConstant: 54).isActive = true
+            horizontalStack2.heightAnchor.constraint(equalToConstant: 54).isActive = true
+            
+            NSLayoutConstraint.activate([
+                stackWithDateAndDeadline.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
+                Switch.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -12),
+                Switch.heightAnchor.constraint(equalToConstant: Switch.frame.height),
+                Switch.widthAnchor.constraint(equalToConstant: Switch.frame.width)
+            ])
+        }
     }
     
     @objc func switchChanged(switch: UISwitch) {
@@ -522,7 +672,8 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
             ])
         }
         else {
-            setupDate()
+            
+            scrollView.removeFromSuperview()
             let horizontalStack1 = UIStackView()
             
             let horizontalStack2 = UIStackView()
@@ -577,7 +728,28 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
         }
     
     @objc func labelTapped1() {
-//        let item = TodoItem(id: nil, text: textView.text, deadline: labelDate.t, importance: <#T##Importance?#>, isTaskComplete: <#T##Bool#>, dateOfCreation: <#T##Date#>, dateOfChange: <#T##Date?#>)
+        toDoitem1.text = textView.text
+        if importance == 0 {
+            toDoitem1.importance = .usual
+        } else if importance == 1 {
+            toDoitem1.importance = .important
+        } else {
+            toDoitem1.importance = .unimportant
+        }
+        if Switch.isOn {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "ru_RU")
+            formatter.dateFormat = "dd MMMM yyyy"
+            formatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
+            toDoitem1.deadline = formatter.date(from: labelDate.text!)
+        }
+        else {
+            toDoitem1.deadline = nil
+        }
+        toDoitem1.dateOfChange = Date()
+        fileCache.add(item: toDoitem1)
+        fileCache.saveAll(name: "test1.json")
+        saveTask.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
     }
     
     @objc func labelTapped() {
