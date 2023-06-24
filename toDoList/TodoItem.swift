@@ -15,12 +15,12 @@ enum Importance {
 
 struct TodoItem {
     let id: String
-    let text: String
-    let deadline: Date?
-    let importance: Importance
-    let isTaskComplete: Bool
-    let dateOfCreation: Date
-    let dateOfChange: Date?
+    var text: String
+    var deadline: Date?
+    var importance: Importance
+    var isTaskComplete: Bool
+    var dateOfCreation: Date
+    var dateOfChange: Date?
     init(id: String?, text: String, deadline: Date?, importance: Importance?, isTaskComplete: Bool, dateOfCreation: Date, dateOfChange: Date?) {
         if let id = id {
             self.id = id
