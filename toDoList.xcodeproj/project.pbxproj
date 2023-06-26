@@ -15,6 +15,15 @@
 		2D279BE72A3EDEE600D19F7F /* test6.json in Resources */ = {isa = PBXBuildFile; fileRef = 2D279BE62A3EDEE600D19F7F /* test6.json */; };
 		2D4F9BF82A43989500B3DBAA /* imp.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D4F9BF62A43989400B3DBAA /* imp.png */; };
 		2D4F9BF92A43989500B3DBAA /* low.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D4F9BF72A43989400B3DBAA /* low.png */; };
+		2D4F9BFB2A49AF8500B3DBAA /* TextViewActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4F9BFA2A49AF8500B3DBAA /* TextViewActions.swift */; };
+		2D4F9BFD2A49B06D00B3DBAA /* SegmentControlActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4F9BFC2A49B06D00B3DBAA /* SegmentControlActions.swift */; };
+		2D4F9C032A49B32F00B3DBAA /* HorizontalStack2Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4F9C022A49B32F00B3DBAA /* HorizontalStack2Actions.swift */; };
+		2D4F9C052A49B37900B3DBAA /* Constrains.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4F9C042A49B37900B3DBAA /* Constrains.swift */; };
+		2D4F9C072A49B3D700B3DBAA /* ViewActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4F9C062A49B3D700B3DBAA /* ViewActions.swift */; };
+		2D4F9C092A49B48B00B3DBAA /* DateSelectionActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4F9C082A49B48B00B3DBAA /* DateSelectionActions.swift */; };
+		2D4F9C0B2A49B59A00B3DBAA /* DeleteButtonActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4F9C0A2A49B59A00B3DBAA /* DeleteButtonActions.swift */; };
+		2D4F9C0D2A49B6E400B3DBAA /* SwitchActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4F9C0C2A49B6E400B3DBAA /* SwitchActions.swift */; };
+		2D4F9C0F2A49B76300B3DBAA /* SaveLabelActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4F9C0E2A49B76300B3DBAA /* SaveLabelActions.swift */; };
 		2DCF199C2A37AA62007A335D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCF199B2A37AA62007A335D /* AppDelegate.swift */; };
 		2DCF199E2A37AA62007A335D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCF199D2A37AA62007A335D /* SceneDelegate.swift */; };
 		2DCF19A02A37AA62007A335D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCF199F2A37AA62007A335D /* ViewController.swift */; };
@@ -54,6 +63,15 @@
 		2D279BE62A3EDEE600D19F7F /* test6.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test6.json; sourceTree = "<group>"; };
 		2D4F9BF62A43989400B3DBAA /* imp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imp.png; sourceTree = SOURCE_ROOT; };
 		2D4F9BF72A43989400B3DBAA /* low.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = low.png; sourceTree = SOURCE_ROOT; };
+		2D4F9BFA2A49AF8500B3DBAA /* TextViewActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewActions.swift; sourceTree = "<group>"; };
+		2D4F9BFC2A49B06D00B3DBAA /* SegmentControlActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentControlActions.swift; sourceTree = "<group>"; };
+		2D4F9C022A49B32F00B3DBAA /* HorizontalStack2Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalStack2Actions.swift; sourceTree = "<group>"; };
+		2D4F9C042A49B37900B3DBAA /* Constrains.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constrains.swift; sourceTree = "<group>"; };
+		2D4F9C062A49B3D700B3DBAA /* ViewActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewActions.swift; sourceTree = "<group>"; };
+		2D4F9C082A49B48B00B3DBAA /* DateSelectionActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectionActions.swift; sourceTree = "<group>"; };
+		2D4F9C0A2A49B59A00B3DBAA /* DeleteButtonActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButtonActions.swift; sourceTree = "<group>"; };
+		2D4F9C0C2A49B6E400B3DBAA /* SwitchActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchActions.swift; sourceTree = "<group>"; };
+		2D4F9C0E2A49B76300B3DBAA /* SaveLabelActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveLabelActions.swift; sourceTree = "<group>"; };
 		2DCF19982A37AA62007A335D /* toDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = toDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DCF199B2A37AA62007A335D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2DCF199D2A37AA62007A335D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -132,6 +150,15 @@
 				2DCF19D12A3B11E9007A335D /* FileCache.swift */,
 				2DCF19CB2A37ADFD007A335D /* TodoItem.swift */,
 				2DCF199F2A37AA62007A335D /* ViewController.swift */,
+				2D4F9C062A49B3D700B3DBAA /* ViewActions.swift */,
+				2D4F9C0E2A49B76300B3DBAA /* SaveLabelActions.swift */,
+				2D4F9C0A2A49B59A00B3DBAA /* DeleteButtonActions.swift */,
+				2D4F9C0C2A49B6E400B3DBAA /* SwitchActions.swift */,
+				2D4F9C082A49B48B00B3DBAA /* DateSelectionActions.swift */,
+				2D4F9BFA2A49AF8500B3DBAA /* TextViewActions.swift */,
+				2D4F9BFC2A49B06D00B3DBAA /* SegmentControlActions.swift */,
+				2D4F9C022A49B32F00B3DBAA /* HorizontalStack2Actions.swift */,
+				2D4F9C042A49B37900B3DBAA /* Constrains.swift */,
 				2DCF19A12A37AA62007A335D /* Main.storyboard */,
 				2DCF19A42A37AA63007A335D /* Assets.xcassets */,
 				2DCF19A62A37AA63007A335D /* LaunchScreen.storyboard */,
@@ -296,10 +323,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D4F9BFD2A49B06D00B3DBAA /* SegmentControlActions.swift in Sources */,
+				2D4F9C032A49B32F00B3DBAA /* HorizontalStack2Actions.swift in Sources */,
 				2DCF19A02A37AA62007A335D /* ViewController.swift in Sources */,
+				2D4F9C0F2A49B76300B3DBAA /* SaveLabelActions.swift in Sources */,
+				2D4F9C052A49B37900B3DBAA /* Constrains.swift in Sources */,
+				2D4F9C072A49B3D700B3DBAA /* ViewActions.swift in Sources */,
+				2D4F9C0B2A49B59A00B3DBAA /* DeleteButtonActions.swift in Sources */,
+				2D4F9BFB2A49AF8500B3DBAA /* TextViewActions.swift in Sources */,
 				2DCF199C2A37AA62007A335D /* AppDelegate.swift in Sources */,
 				2DCF19CC2A37ADFD007A335D /* TodoItem.swift in Sources */,
 				2DCF19D22A3B11E9007A335D /* FileCache.swift in Sources */,
+				2D4F9C0D2A49B6E400B3DBAA /* SwitchActions.swift in Sources */,
+				2D4F9C092A49B48B00B3DBAA /* DateSelectionActions.swift in Sources */,
 				2DCF199E2A37AA62007A335D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
