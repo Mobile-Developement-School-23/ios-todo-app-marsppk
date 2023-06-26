@@ -20,7 +20,7 @@ extension ViewController {
                 horizontalStack2.addArrangedSubview($0)
             }
             
-            [horizontalStack1, separator, horizontalStack2].forEach {
+            [horizontalStack1, stackSeparator1, horizontalStack2].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack.addArrangedSubview($0)
             }
@@ -29,17 +29,6 @@ extension ViewController {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack1.addArrangedSubview($0)
             }
-            
-            
-            NSLayoutConstraint.activate([
-                horizontalStack1.heightAnchor.constraint(equalToConstant: 54),
-                horizontalStack2.heightAnchor.constraint(equalToConstant: 54),
-                stackWithDateAndDeadline.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
-                Switch.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -12),
-                Switch.heightAnchor.constraint(equalToConstant: Switch.frame.height),
-                Switch.widthAnchor.constraint(equalToConstant: Switch.frame.width)
-            ])
-            
         }
         else {
             stackWithDateAndDeadline.removeFromSuperview()
@@ -55,7 +44,7 @@ extension ViewController {
                 horizontalStack2.addArrangedSubview($0)
             }
             
-            [horizontalStack1, separator, horizontalStack2].forEach {
+            [horizontalStack1, stackSeparator1, horizontalStack2].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack.addArrangedSubview($0)
             }
@@ -64,15 +53,6 @@ extension ViewController {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack1.addArrangedSubview($0)
             }
-            
-            NSLayoutConstraint.activate([
-                horizontalStack1.heightAnchor.constraint(equalToConstant: 54),
-                horizontalStack2.heightAnchor.constraint(equalToConstant: 54),
-                stackWithDateAndDeadline.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
-                Switch.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -12),
-                Switch.heightAnchor.constraint(equalToConstant: Switch.frame.height),
-                Switch.widthAnchor.constraint(equalToConstant: Switch.frame.width)
-            ])
             flag_calendar = true
         }
     }

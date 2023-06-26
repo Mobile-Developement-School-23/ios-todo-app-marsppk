@@ -9,6 +9,11 @@ import UIKit
 
 extension ViewController {
     
+    func setImages() {
+        segmentControl.setImage(imageLow, forSegmentAt: 0)
+        segmentControl.setImage(imageImportant, forSegmentAt: 2)
+    }
+    
     @IBAction func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:

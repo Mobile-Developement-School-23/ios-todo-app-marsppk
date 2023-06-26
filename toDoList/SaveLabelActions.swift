@@ -18,11 +18,10 @@ extension ViewController {
             toDoitem1.importance = .unimportant
         }
         if Switch.isOn {
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "ru_RU")
-            formatter.dateFormat = "dd MMMM yyyy"
             formatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
-            toDoitem1.deadline = formatter.date(from: labelDate.text!)
+            if let date = labelDate.text {
+                toDoitem1.deadline = formatter.date(from: date)
+            }
         }
         else {
             toDoitem1.deadline = nil

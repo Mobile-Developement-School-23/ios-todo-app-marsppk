@@ -13,12 +13,11 @@ extension ViewController {
         if let dateComponents {
             let dateSelection = UICalendarSelectionSingleDate(delegate: self)
             let components = dateComponents.date
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "ru_RU")
-            formatter.dateFormat = "dd MMMM yyyy"
-            let string_date = formatter.string(from: components!)
-            labelDate.text = string_date
-            separator1.removeFromSuperview()
+            if let components {
+                let string_date = formatter.string(from: components)
+                labelDate.text = string_date
+            }
+            stackSeparator2.removeFromSuperview()
             calendarView.removeFromSuperview()
             flag_calendar = true
             dateSelection.setSelected(dateComponents, animated: true)
@@ -37,32 +36,32 @@ extension ViewController {
         calendarView.selectionBehavior = dateSelection
         if labelDate.text == nil {
             let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())
-            let tomorrowComponents = Calendar.current.dateComponents([.year, .month, .day], from: tomorrow!)
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "ru_RU")
-            formatter.dateFormat = "dd MMMM yyyy"
-            let string_date = formatter.string(from: tomorrow!)
-            labelDate.text = string_date
-            dateSelection.setSelected(tomorrowComponents, animated: true)
+            if let tomorrow {
+                let tomorrowComponents = Calendar.current.dateComponents([.year, .month, .day], from: tomorrow)
+                let string_date = formatter.string(from: tomorrow)
+                labelDate.text = string_date
+                dateSelection.setSelected(tomorrowComponents, animated: true)
+            }
         }
         else {
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "ru_RU")
-            formatter.dateFormat = "dd MMMM yyyy"
-            let date = formatter.date(from: labelDate.text!)
-            let components = Calendar.current.dateComponents([.year, .month, .day], from: date!)
-            dateSelection.setSelected(components, animated: true)
+            if let dateLabel = labelDate.text {
+                let date = formatter.date(from: dateLabel)
+                if let date {
+                    let components = Calendar.current.dateComponents([.year, .month, .day], from: date)
+                    dateSelection.setSelected(components, animated: true)
+                }
+            }
         }
-        labelDate.translatesAutoresizingMaskIntoConstraints = false
-        let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
-        labelDate.addGestureRecognizer(tapGesture1)
     }
     
     @objc func labelTapped() {
         if flag_calendar {
             setupDate()
-
-            [separator1, calendarView].forEach {
+            
+            stackSeparator2.addArrangedSubview(separator1)
+            separator1.translatesAutoresizingMaskIntoConstraints = false
+            
+            [stackSeparator2, calendarView].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack.addArrangedSubview($0)
             }
@@ -72,27 +71,17 @@ extension ViewController {
                 verticalStack1.addArrangedSubview($0)
             }
             
-            verticalStack1.translatesAutoresizingMaskIntoConstraints = false
             scrollView.addSubview(verticalStack1)
-            scrollView.translatesAutoresizingMaskIntoConstraints = false
             
             NSLayoutConstraint.activate([
                 separator1.topAnchor.constraint(equalTo: horizontalStack2.bottomAnchor),
-                separator1.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
-                separator1.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -16),
                 separator1.heightAnchor.constraint(equalToConstant: 0.5)
             ])
             
-            NSLayoutConstraint.activate([
-                calendarView.leadingAnchor.constraint(equalTo: verticalStack.leadingAnchor, constant: 16),
-                calendarView.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -16),
-                calendarView.heightAnchor.constraint(equalToConstant: 300),
-                calendarView.topAnchor.constraint(equalTo: separator1.bottomAnchor, constant: 8)
-            ])
             flag_calendar = false
         }
         else {
-            separator1.removeFromSuperview()
+            stackSeparator2.removeFromSuperview()
             calendarView.removeFromSuperview()
             flag_calendar = true
         }
