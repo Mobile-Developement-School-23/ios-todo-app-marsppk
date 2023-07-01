@@ -6,9 +6,9 @@ enum Importance {
     case unimportant
     init(_ val: String) {
         switch val {
-            case "important"  : self = .important
+            case "important": self = .important
             case "unimportant": self = .unimportant
-            case _ : self = .usual
+            case _: self = .usual
         }
     }
 }
@@ -41,36 +41,33 @@ struct TodoItem {
 }
 
 extension TodoItem {
-    
+
     static func parse(json: Any) -> TodoItem? {
-        guard let dict = json as? [String:Any] else { return nil }
+        guard let dict = json as? [String: Any] else { return nil }
         guard let id = dict["id"] as? String else { return nil }
         guard let text = dict["text"] as? String else { return nil }
         guard let isTaskComplete = dict["isTaskComplete"] as? Bool else { return nil }
         guard let date = dict["dateOfCreation"] as? String else { return nil }
-        
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
-        var deadline: Date? = nil
-        if dict["deadline"] != nil {
-            deadline = dateFormatter.date(from: dict["deadline"] as! String)!
+        var deadline: Date?
+        if let dl = dict["deadline"] {
+            deadline = dateFormatter.date(from: dl as? String ?? "")!
         }
-        var importance = "usual"
-        if dict["importance"] != nil {
-            importance = dict["importance"] as! String
-        }
+        let importance = dict["importance"] as? String ?? "usual"
         let dateOfCreation = dateFormatter.date(from: date)!
-        var dateOfChange: Date? = nil
-        if dict["dateOfChange"] != nil {
-            dateOfChange = dateFormatter.date(from: dict["dateOfChange"] as! String)!
+        var dateOfChange: Date?
+        if let date = dict["dateOfChange"] {
+            dateOfChange = dateFormatter.date(from: date as? String ?? "")!
         }
         let item = TodoItem(id: id, text: text, deadline: deadline, importance: Importance(importance), isTaskComplete: isTaskComplete, dateOfCreation: dateOfCreation, dateOfChange: dateOfChange)
         return item
     }
-    
+
     var json: Any {
-        var properties: [String:Any] = [:]
+        var properties: [String: Any] = [:]
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

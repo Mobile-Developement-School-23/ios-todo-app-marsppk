@@ -9,28 +9,27 @@ import UIKit
 
 extension ViewController {
     @objc func switchChanged(switch: UISwitch) {
-        if Switch.isOn {
+        if switchButton.isOn {
             setupDate()
-            
+
             stackWithDateAndDeadline.addArrangedSubview(labelDeadline)
             stackWithDateAndDeadline.addArrangedSubview(labelDate)
-            
-            [stackWithDateAndDeadline, Switch].forEach {
+
+            [stackWithDateAndDeadline, switchButton].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 horizontalStack2.addArrangedSubview($0)
             }
-            
+
             [horizontalStack1, stackSeparator1, horizontalStack2].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack.addArrangedSubview($0)
             }
-            
+
             [textView, verticalStack, deleteButton].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack1.addArrangedSubview($0)
             }
-        }
-        else {
+        } else {
             stackWithDateAndDeadline.removeFromSuperview()
             separator1.removeFromSuperview()
             calendarView.removeFromSuperview()
@@ -39,21 +38,21 @@ extension ViewController {
             stackWithDateAndDeadline.distribution = .fill
             stackWithDateAndDeadline.spacing = 0
             stackWithDateAndDeadline.addArrangedSubview(labelDeadline)
-            [stackWithDateAndDeadline, Switch].forEach {
+            [stackWithDateAndDeadline, switchButton].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 horizontalStack2.addArrangedSubview($0)
             }
-            
+
             [horizontalStack1, stackSeparator1, horizontalStack2].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack.addArrangedSubview($0)
             }
-            
+
             [textView, verticalStack, deleteButton].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack1.addArrangedSubview($0)
             }
-            flag_calendar = true
+            flagCalendar = true
         }
     }
 }

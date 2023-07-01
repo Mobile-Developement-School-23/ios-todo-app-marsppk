@@ -10,11 +10,11 @@ import UIKit
 extension ViewController {
     func setupConstrains() {
         NSLayoutConstraint.activate([
-            
+
             horizontalStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             horizontalStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             horizontalStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            
+
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -35,9 +35,8 @@ extension ViewController {
             segmentControl.widthAnchor.constraint(equalToConstant: segmentControl.frame.width),
 
             stackSeparator1.topAnchor.constraint(equalTo: horizontalStack1.bottomAnchor),
-            separator.heightAnchor.constraint(equalToConstant: 0.5),
-            
-            
+            separator.heightAnchor.constraint(equalToConstant: 0.5)
+
         ])
     }
 }

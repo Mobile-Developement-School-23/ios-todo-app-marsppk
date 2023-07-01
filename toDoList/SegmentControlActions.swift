@@ -8,12 +8,12 @@
 import UIKit
 
 extension ViewController {
-    
+
     func setImages() {
         segmentControl.setImage(imageLow, forSegmentAt: 0)
         segmentControl.setImage(imageImportant, forSegmentAt: 2)
     }
-    
+
     @IBAction func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
@@ -30,5 +30,5 @@ extension ViewController {
             saveTask.textColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
         }
     }
-    
+
 }
