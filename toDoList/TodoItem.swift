@@ -89,4 +89,35 @@ extension TodoItem {
         }
         return properties
     }
+    
+    var asNetworking: ToDoItemNetworking {
+        var importance = "basic"
+        var deadline: Int64?
+        var changedAt: Int64 = Int64(Date().timeIntervalSince1970)
+        
+        if self.importance == .unimportant {
+            importance = "low"
+        } else if self.importance == .important {
+            importance = "important"
+        }
+        if let deadlineFromLocal = self.deadline {
+            deadline = Int64(deadlineFromLocal.timeIntervalSince1970)
+        }
+        if let modificationDateFromLocal = self.dateOfChange {
+            changedAt = Int64(modificationDateFromLocal.timeIntervalSince1970)
+        }
+        
+        let asNetworking = ToDoItemNetworking(
+            id: self.id,
+            text: self.text,
+            importance: importance,
+            deadline: deadline,
+            done: self.isTaskComplete,
+            color: nil,
+            createdAt: Int64(self.dateOfCreation.timeIntervalSince1970),
+            changedAt: changedAt,
+            lastUpdatedBy: ListOfTasksViewController.deviceID
+        )
+        return asNetworking
+    }
 }
