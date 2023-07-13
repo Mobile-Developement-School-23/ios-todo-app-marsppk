@@ -4,7 +4,6 @@
 //
 //  Created by Maria Slepneva on 12.06.2023.
 //
-
 import XCTest
 @testable import toDoList
 
@@ -26,29 +25,29 @@ final class ToDoListTests: XCTestCase {
     }
 
     func testWithId() throws {
-        let dateFormatter = Formatter()
+        let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
         let toDo = TodoItem(id: "123", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
-        XCTAssertEqual(Todo.id, "123", "Struct incorrect")
-        XCTAssertEqual(Todo.text, "do homework", "Struct incorrect")
-        XCTAssertEqual(Todo.deadline, nil, "Struct incorrect")
-        XCTAssertEqual(Todo.importance, .usual, "Struct incorrect")
-        XCTAssertEqual(Todo.isTaskComplete, false, "Struct incorrect")
-        XCTAssertEqual(Todo.dateOfCreation, dateOfCreation, "Struct incorrect")
-        XCTAssertEqual(Todo.dateOfChange, nil, "Struct incorrect")
+        XCTAssertEqual(toDo.id, "123", "Struct incorrect")
+        XCTAssertEqual(toDo.text, "do homework", "Struct incorrect")
+        XCTAssertEqual(toDo.deadline, nil, "Struct incorrect")
+        XCTAssertEqual(toDo.importance, .usual, "Struct incorrect")
+        XCTAssertEqual(toDo.isTaskComplete, false, "Struct incorrect")
+        XCTAssertEqual(toDo.dateOfCreation, dateOfCreation, "Struct incorrect")
+        XCTAssertEqual(toDo.dateOfChange, nil, "Struct incorrect")
     }
 
     func testWithoutId() throws {
-        let dateFormatter = Formatter()
+        let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
         let toDo = TodoItem(id: nil, text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
-        XCTAssertNotEqual(Todo.id, nil, "Struct incorrect")
-        XCTAssertEqual(Todo.text, "do homework", "Struct incorrect")
-        XCTAssertEqual(Todo.deadline, nil, "Struct incorrect")
-        XCTAssertEqual(Todo.importance, .usual, "Struct incorrect")
-        XCTAssertEqual(Todo.isTaskComplete, false, "Struct incorrect")
-        XCTAssertEqual(Todo.dateOfCreation, dateOfCreation, "Struct incorrect")
-        XCTAssertEqual(Todo.dateOfChange, nil, "Struct incorrect")
+        XCTAssertNotEqual(toDo.id, nil, "Struct incorrect")
+        XCTAssertEqual(toDo.text, "do homework", "Struct incorrect")
+        XCTAssertEqual(toDo.deadline, nil, "Struct incorrect")
+        XCTAssertEqual(toDo.importance, .usual, "Struct incorrect")
+        XCTAssertEqual(toDo.isTaskComplete, false, "Struct incorrect")
+        XCTAssertEqual(toDo.dateOfCreation, dateOfCreation, "Struct incorrect")
+        XCTAssertEqual(toDo.dateOfChange, nil, "Struct incorrect")
     }
 
     func testParse1() throws {
@@ -59,7 +58,7 @@ final class ToDoListTests: XCTestCase {
         let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
         let struc = TodoItem.parse(json: dict)
         XCTAssertEqual(struc?.id, "345", "JSON parsed incorrect")
-        XCTAssertEqual(struc?.dateOfCreation, Formatter().date(from: "2023-06-14 22:52:40"), "JSON parsed incorrect")
+        XCTAssertEqual(struc?.dateOfCreation, formatter().date(from: "2023-06-14 22:52:40"), "JSON parsed incorrect")
         XCTAssertEqual(struc?.isTaskComplete, false, "JSON parsed incorrect")
     }
 
@@ -114,10 +113,10 @@ final class ToDoListTests: XCTestCase {
     }
 
     func testconvToJSON() throws {
-        let dateFormatter = Formatter()
+        let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
         let toDo = TodoItem(id: "123", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
-        guard let dict = Todo.json as [String: Any] else {return}
+        guard let dict = toDo.json as? [String: Any] else {return}
         XCTAssertEqual(dict["id"] as? String, "123", "Incorrect convertation to json")
         XCTAssertEqual(dict["text"] as? String, "do homework", "Incorrect convertation to json")
         XCTAssertEqual(dict["isTaskComplete"] as? Bool, false, "Incorrect convertation to json")
@@ -130,12 +129,12 @@ final class ToDoListTests: XCTestCase {
 
     func testWrite() throws {
         let data = FileCache()
-        let dateFormatter = Formatter()
+        let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
         let toDo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
         let toDo1 = TodoItem(id: "3485", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
-        data.add(item: Todo)
-        data.add(item: Todo1)
+        data.add(item: toDo)
+        data.add(item: toDo1)
         data.saveAll(name: "test.json")
     }
 
@@ -146,23 +145,36 @@ final class ToDoListTests: XCTestCase {
 
     func testRemove() throws {
         let data = FileCache()
-        let dateFormatter = Formatter()
+        let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
         let toDo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
-        data.add(item: Todo)
+        data.add(item: toDo)
         data.remove(id: "345")
         XCTAssertEqual(data.items.count, 0, "Elements is not delete")
     }
 
     func testDublicateID() throws {
         let data = FileCache()
-        let dateFormatter = Formatter()
+        let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
         let toDo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
         let toDo1 = TodoItem(id: "345", text: "new task", deadline: nil, importance: Importance("important"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
-        data.add(item: Todo)
-        data.add(item: Todo1)
+        data.add(item: toDo)
+        data.add(item: toDo1)
         XCTAssertEqual(data.items.count, 1, "ID is dublicate")
         XCTAssertEqual(data.items[0].text, "new task", "Data is not rewrited")
+    }
+
+    func testGetItem() async throws {
+        let networkingService = DefaultNetworkingServiceWithExtention(token: "octactine")
+        let item = try await networkingService.getItemExtention(id: "F093368A-3B2C-4CC9-9E2B-67E99E20B01C")
+        XCTAssertEqual(item?.element.id, "F093368A-3B2C-4CC9-9E2B-67E99E20B01C", "Struct incorrect")
+        XCTAssertEqual(item?.element.text, "have fun", "Struct incorrect")
+        XCTAssertEqual(item?.element.importance, "important", "Struct incorrect")
+        XCTAssertEqual(item?.element.deadline, nil, "Struct incorrect")
+        XCTAssertEqual(item?.element.done, false, "Struct incorrect")
+        XCTAssertEqual(item?.element.color, nil, "Struct incorrect")
+        XCTAssertEqual(item?.element.createdAt, 1688673145, "Struct incorrect")
+        XCTAssertEqual(item?.element.changedAt, 1688673145, "Struct incorrect")
     }
 }
