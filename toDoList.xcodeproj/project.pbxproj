@@ -49,6 +49,8 @@
 		2DFCF4152A589AD70035BB42 /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 2DFCF4142A589AD70035BB42 /* CocoaLumberjack */; };
 		2DFCF4172A589AD70035BB42 /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2DFCF4162A589AD70035BB42 /* CocoaLumberjackSwift */; };
 		2DFCF4192A589AD70035BB42 /* CocoaLumberjackSwiftLogBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 2DFCF4182A589AD70035BB42 /* CocoaLumberjackSwiftLogBackend */; };
+		2DFCF41B2A58B6130035BB42 /* DefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFCF41A2A58B6130035BB42 /* DefaultNetworkingService.swift */; };
+		2DFCF41D2A58BFEB0035BB42 /* FileCacheNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFCF41C2A58BFEB0035BB42 /* FileCacheNetworking.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +110,8 @@
 		2DFCF4032A58949D0035BB42 /* dataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dataTask.swift; sourceTree = "<group>"; };
 		2DFCF4072A5898420035BB42 /* DefaultNetworkingServiceWithExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkingServiceWithExtention.swift; sourceTree = "<group>"; };
 		2DFCF4092A5898F10035BB42 /* ToDoItemNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemNetworking.swift; sourceTree = "<group>"; };
+		2DFCF41A2A58B6130035BB42 /* DefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkingService.swift; sourceTree = "<group>"; };
+		2DFCF41C2A58BFEB0035BB42 /* FileCacheNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCacheNetworking.swift; sourceTree = "<group>"; };
 		644DF1E3FB702E069717EE34 /* Pods-toDoListTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toDoListTests.release.xcconfig"; path = "Target Support Files/Pods-toDoListTests/Pods-toDoListTests.release.xcconfig"; sourceTree = "<group>"; };
 		774CA4BF8AA32DE57879144E /* Pods-toDoList-toDoListUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toDoList-toDoListUITests.debug.xcconfig"; path = "Target Support Files/Pods-toDoList-toDoListUITests/Pods-toDoList-toDoListUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		B28A383A140FADD472D1D9E1 /* Pods-toDoList-toDoListUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toDoList-toDoListUITests.release.xcconfig"; path = "Target Support Files/Pods-toDoList-toDoListUITests/Pods-toDoList-toDoListUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -200,6 +204,8 @@
 				2DFCF4032A58949D0035BB42 /* dataTask.swift */,
 				2DFCF4072A5898420035BB42 /* DefaultNetworkingServiceWithExtention.swift */,
 				2DFCF4092A5898F10035BB42 /* ToDoItemNetworking.swift */,
+				2DFCF41A2A58B6130035BB42 /* DefaultNetworkingService.swift */,
+				2DFCF41C2A58BFEB0035BB42 /* FileCacheNetworking.swift */,
 			);
 			path = toDoList;
 			sourceTree = "<group>";
@@ -482,6 +488,7 @@
 				2D3E22812A4FCBB3003D2E8F /* TextViewActions.swift in Sources */,
 				2D3E22682A4FCB5B003D2E8F /* AppDelegate.swift in Sources */,
 				2DFCF40A2A5898F10035BB42 /* ToDoItemNetworking.swift in Sources */,
+				2DFCF41D2A58BFEB0035BB42 /* FileCacheNetworking.swift in Sources */,
 				2D3E227F2A4FCBAE003D2E8F /* SwitchActions.swift in Sources */,
 				2D3E226E2A4FCB93003D2E8F /* TableView.swift in Sources */,
 				2D3E226C2A4FCB83003D2E8F /* listOfTasksViewController.swift in Sources */,
@@ -495,6 +502,7 @@
 				2D3E227D2A4FCBAC003D2E8F /* SegmentControlActions.swift in Sources */,
 				2D3E22752A4FCBA3003D2E8F /* Constrains.swift in Sources */,
 				2D3E22662A4FCB4E003D2E8F /* SceneDelegate.swift in Sources */,
+				2DFCF41B2A58B6130035BB42 /* DefaultNetworkingService.swift in Sources */,
 				2D3E227B2A4FCBAA003D2E8F /* SaveLabelActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

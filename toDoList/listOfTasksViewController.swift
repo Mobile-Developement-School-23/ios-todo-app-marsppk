@@ -1,5 +1,5 @@
 //
-//  ViewController1.swift
+//  ListOfTasksViewController.swift
 //  toDoList
 //
 //  Created by Maria Slepneva on 27.06.2023.
@@ -8,13 +8,17 @@
 import UIKit
 import CocoaLumberjackSwift
 
-protocol ListOfTasksViewControllerDelegate: class {
+protocol ListOfTasksViewControllerDelegate: AnyObject {
       func load(item: TodoItem)
   }
 
 class ListOfTasksViewController: UIViewController {
+    
+    static let deviceID = UIDevice.current.identifierForVendor!.uuidString
 
     weak var delegate: ListOfTasksViewControllerDelegate?
+    
+    let networking = DefaultNetworkingService(token: "octactine")
 
     let countOfDoneTasks = 0
 
@@ -104,14 +108,13 @@ class ListOfTasksViewController: UIViewController {
     var fileCache = FileCache()
 
     let tableView = UITableView(frame: .zero, style: .plain)
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        networking.getList()
         let scrollView = UIScrollView(frame: view.bounds)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
-
         fileCache.loadAll(name: "test1.json")
         view.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.95, alpha: 1.0)
         navigationController?.navigationBar.layoutMargins = UIEdgeInsets(top: 0, left: 32, bottom: 0, right: 0)
@@ -169,6 +172,10 @@ class ListOfTasksViewController: UIViewController {
         calculateTableViewHeight()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
     @IBAction func openModalScreen(_ sender: Any) {
         let modalVC = ViewController()
         modalVC.delegate = self
