@@ -27,7 +27,7 @@ final class ToDoListTests: XCTestCase {
     func testWithId() throws {
         let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
-        let toDo = TodoItem(id: "123", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
+        let toDo = TodoItem(id: "123", text: "do homework", deadline: nil, importance: Importance(rawValue: "usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
         XCTAssertEqual(toDo.id, "123", "Struct incorrect")
         XCTAssertEqual(toDo.text, "do homework", "Struct incorrect")
         XCTAssertEqual(toDo.deadline, nil, "Struct incorrect")
@@ -40,7 +40,7 @@ final class ToDoListTests: XCTestCase {
     func testWithoutId() throws {
         let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
-        let toDo = TodoItem(id: nil, text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
+        let toDo = TodoItem(id: nil, text: "do homework", deadline: nil, importance: Importance(rawValue: "usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
         XCTAssertNotEqual(toDo.id, nil, "Struct incorrect")
         XCTAssertEqual(toDo.text, "do homework", "Struct incorrect")
         XCTAssertEqual(toDo.deadline, nil, "Struct incorrect")
@@ -115,7 +115,7 @@ final class ToDoListTests: XCTestCase {
     func testconvToJSON() throws {
         let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
-        let toDo = TodoItem(id: "123", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
+        let toDo = TodoItem(id: "123", text: "do homework", deadline: nil, importance: Importance(rawValue: "usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
         guard let dict = toDo.json as? [String: Any] else {return}
         XCTAssertEqual(dict["id"] as? String, "123", "Incorrect convertation to json")
         XCTAssertEqual(dict["text"] as? String, "do homework", "Incorrect convertation to json")
@@ -131,8 +131,8 @@ final class ToDoListTests: XCTestCase {
         let data = FileCache()
         let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
-        let toDo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
-        let toDo1 = TodoItem(id: "3485", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
+        let toDo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance(rawValue: "usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
+        let toDo1 = TodoItem(id: "3485", text: "do homework", deadline: nil, importance: Importance(rawValue: "usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
         data.add(item: toDo)
         data.add(item: toDo1)
         data.saveAll(name: "test.json")
@@ -147,7 +147,7 @@ final class ToDoListTests: XCTestCase {
         let data = FileCache()
         let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
-        let toDo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
+        let toDo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance(rawValue: "usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
         data.add(item: toDo)
         data.remove(id: "345")
         XCTAssertEqual(data.items.count, 0, "Elements is not delete")
@@ -157,8 +157,8 @@ final class ToDoListTests: XCTestCase {
         let data = FileCache()
         let dateFormatter = formatter()
         let dateOfCreation = dateFormatter.date(from: "2023-06-14 22:52:40")!
-        let toDo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance("usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
-        let toDo1 = TodoItem(id: "345", text: "new task", deadline: nil, importance: Importance("important"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
+        let toDo = TodoItem(id: "345", text: "do homework", deadline: nil, importance: Importance(rawValue: "usual"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
+        let toDo1 = TodoItem(id: "345", text: "new task", deadline: nil, importance: Importance(rawValue: "important"), isTaskComplete: false, dateOfCreation: dateOfCreation, dateOfChange: nil)
         data.add(item: toDo)
         data.add(item: toDo1)
         XCTAssertEqual(data.items.count, 1, "ID is dublicate")

@@ -1,16 +1,9 @@
 import Foundation
 
-enum Importance {
-    case important
-    case usual
-    case unimportant
-    init(_ val: String) {
-        switch val {
-            case "important": self = .important
-            case "unimportant": self = .unimportant
-            case _: self = .usual
-        }
-    }
+enum Importance: String {
+    case important = "important"
+    case usual = "usual"
+    case unimportant = "unimportant"
 }
 
 struct TodoItem {
@@ -21,7 +14,15 @@ struct TodoItem {
     var isTaskComplete: Bool
     var dateOfCreation: Date
     var dateOfChange: Date?
-    init(id: String?, text: String, deadline: Date?, importance: Importance?, isTaskComplete: Bool, dateOfCreation: Date, dateOfChange: Date?) {
+    init(
+        id: String?,
+        text: String,
+        deadline: Date?,
+        importance: Importance?,
+        isTaskComplete: Bool,
+        dateOfCreation: Date,
+        dateOfChange: Date?
+    ) {
         if let id = id {
             self.id = id
         } else {
@@ -32,7 +33,7 @@ struct TodoItem {
         if let importance = importance {
             self.importance = importance
         } else {
-            self.importance = Importance("usual")
+            self.importance = Importance(rawValue: "usual") ?? .usual
         }
         self.isTaskComplete = isTaskComplete
         self.dateOfCreation = dateOfCreation
@@ -62,7 +63,15 @@ extension TodoItem {
         if let date = dict["dateOfChange"] {
             dateOfChange = dateFormatter.date(from: date as? String ?? "")!
         }
-        let item = TodoItem(id: id, text: text, deadline: deadline, importance: Importance(importance), isTaskComplete: isTaskComplete, dateOfCreation: dateOfCreation, dateOfChange: dateOfChange)
+        let item = TodoItem(
+            id: id,
+            text: text,
+            deadline: deadline,
+            importance: Importance(rawValue: importance),
+            isTaskComplete: isTaskComplete,
+            dateOfCreation: dateOfCreation,
+            dateOfChange: dateOfChange
+        )
         return item
     }
 
@@ -77,11 +86,8 @@ extension TodoItem {
         if let deadline = self.deadline {
             properties["deadline"] = dateFormatter.string(from: deadline)
         }
-        if self.importance == .important {
-            properties["importance"] = "important"
-        }
-        if self.importance == .unimportant {
-            properties["importance"] = "unimportant"
+        if self.importance != .usual {
+            properties["importance"] = self.importance.rawValue
         }
         properties["dateOfCreation"] = dateFormatter.string(from: self.dateOfCreation)
         if let dateOfChange = self.dateOfChange {
@@ -89,12 +95,25 @@ extension TodoItem {
         }
         return properties
     }
-    
+
+    static func parseCoreData(item: ToDoItem) -> TodoItem? {
+        let item = TodoItem(
+            id: item.id,
+            text: item.text,
+            deadline: item.deadline,
+            importance: Importance(rawValue: item.importance),
+            isTaskComplete: item.isTaskComplete,
+            dateOfCreation: item.dateOfCreation,
+            dateOfChange: item.dateOfChange
+        )
+        return item
+    }
+
     var asNetworking: ToDoItemNetworking {
         var importance = "basic"
         var deadline: Int64?
         var changedAt: Int64 = Int64(Date().timeIntervalSince1970)
-        
+
         if self.importance == .unimportant {
             importance = "low"
         } else if self.importance == .important {
@@ -106,7 +125,7 @@ extension TodoItem {
         if let modificationDateFromLocal = self.dateOfChange {
             changedAt = Int64(modificationDateFromLocal.timeIntervalSince1970)
         }
-        
+
         let asNetworking = ToDoItemNetworking(
             id: self.id,
             text: self.text,

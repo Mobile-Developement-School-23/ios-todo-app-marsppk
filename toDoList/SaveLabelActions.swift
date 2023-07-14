@@ -16,6 +16,9 @@ extension ViewController {
     @objc func labelTapped1() {
         if saveTask.textColor == UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0) {
             var toDoitem = createToDoItem()
+            if let cell = tappedCell {
+                toDoitem = cell
+            }
             toDoitem.text = textView.text
             if importance == 0 {
                 toDoitem.importance = .usual
@@ -35,8 +38,8 @@ extension ViewController {
             toDoitem.isTaskComplete = false
             toDoitem.dateOfChange = Date()
             saveTask.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
-            fileCache.add(item: toDoitem)
-            delegate?.didSaveNote(toDoitem)
+            fileCache.createItemCoreData(item: toDoitem)
+            delegate?.didSaveNote()
             dismiss(animated: true, completion: nil)
         }
     }

@@ -6,9 +6,13 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
 
 final class FileCache {
     private(set) var items = [TodoItem]()
+
+    private(set) var context: NSManagedObjectContext?
 
     func add(item: TodoItem) {
         if let index = items.firstIndex(where: { $0.id == item.id }) {
@@ -18,24 +22,19 @@ final class FileCache {
         }
     }
 
+    func setContext(context: NSManagedObjectContext) {
+        self.context = context
+    }
+
     func remove(id: String) {
         self.items.removeAll { $0.id == id }
     }
 
-    func changeIsTaskComplete(id: String) {
-        for item in 0..<items.count {
-            if items[item].id == id {
-                if items[item].isTaskComplete == true {
-                    items[item].isTaskComplete = false
-                } else {
-                    items[item].isTaskComplete = true
-                }
-            }
-        }
-    }
-
     func saveAll(name: String) {
-        guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        guard let documentDirectoryUrl = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask).first
+        else { return }
 
         let fileUrl = documentDirectoryUrl.appendingPathComponent(name)
         var dict: [String: Array] = ["items": []]
@@ -52,7 +51,10 @@ final class FileCache {
     }
 
     func loadAll(name: String) {
-        guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        guard let documentDirectoryUrl = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask).first
+        else { return }
 
         self.items = [TodoItem]()
         let url = documentDirectoryUrl.appendingPathComponent(name)
@@ -67,6 +69,67 @@ final class FileCache {
                     self.add(item: note)
                 }
             }
+        }
+    }
+
+    func getAllItemsCoreData() {
+        self.items = []
+        do {
+            let items = try context!.fetch(ToDoItem.fetchRequest())
+            for item in items {
+                self.add(item: item.asTodoItem)
+            }
+        } catch {
+            // error
+        }
+    }
+
+    func deleteItemCoreData(deleteItem: TodoItem) {
+        do {
+            let items = try context!.fetch(ToDoItem.fetchRequest())
+            for item in items {
+                if item.id == deleteItem.id {
+                    context?.delete(item)
+                }
+            }
+            try context?.save()
+        } catch {
+            // error
+        }
+    }
+
+    func updateItemCoreData(newItem: TodoItem) {
+        do {
+            let items = try context!.fetch(ToDoItem.fetchRequest())
+            for item in items {
+                if item.id == newItem.id {
+                    item.deadline = newItem.deadline
+                    item.text = newItem.text
+                    item.isTaskComplete = newItem.isTaskComplete
+                    item.dateOfCreation = newItem.dateOfCreation
+                    item.dateOfChange = newItem.dateOfChange
+                    item.importance = newItem.importance.rawValue
+                }
+            }
+            try context?.save()
+        } catch {
+            // error
+        }
+    }
+
+    func createItemCoreData(item: TodoItem) {
+        let newItem = ToDoItem(context: context!)
+        newItem.id = item.id
+        newItem.text = item.text
+        newItem.importance = item.importance.rawValue
+        newItem.isTaskComplete = item.isTaskComplete
+        newItem.dateOfChange = item.dateOfChange
+        newItem.dateOfCreation = item.dateOfCreation
+        newItem.deadline = item.deadline
+        do {
+            try context?.save()
+        } catch {
+            // error
         }
     }
 }
