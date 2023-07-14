@@ -17,16 +17,16 @@ protocol NetworkServiceDelegate: AnyObject {
 }
 
 final class DefaultNetworkingService: NetworkServiceDelegate {
-    
+
     private let token: String
     private let baseURL = "https://beta.mrdekk.ru/todobackend"
     private let httpStatusCodeSuccess = 200..<300
     private(set) var revision = 0
-    
+
     init (token: String) {
            self.token = token
        }
-    
+
     func addElement(item: TodoItem) async throws {
         let toDoItem = item.asNetworking
         let body = PostElement(element: toDoItem)
@@ -50,7 +50,7 @@ final class DefaultNetworkingService: NetworkServiceDelegate {
             throw DefaultNetworkingServiceError.failedResponse(response)
         }
     }
-    
+
     func getList() async throws -> List? {
         guard let url = URL(string: "\(self.baseURL)/list") else { return nil }
         var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
@@ -69,7 +69,7 @@ final class DefaultNetworkingService: NetworkServiceDelegate {
         }
         return data
     }
-    
+
     func getItem(id: String) async throws -> Element? {
         guard let url = URL(string: "\(self.baseURL)/list/\(id)") else { return nil }
         var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
@@ -82,8 +82,7 @@ final class DefaultNetworkingService: NetworkServiceDelegate {
         guard self.httpStatusCodeSuccess.contains(response.statusCode) else {
             if self.httpStatusCodeSuccess.contains(404) {
                 throw DefaultNetworkingServiceError.unknownElement(id)
-            }
-            else {
+            } else {
                 throw DefaultNetworkingServiceError.failedResponse(response)
             }
         }
@@ -93,7 +92,7 @@ final class DefaultNetworkingService: NetworkServiceDelegate {
         }
         return data
     }
-    
+
     func changeItem(item: TodoItem) async throws {
         let toDoItem = item.asNetworking
         let body = PostElement(element: toDoItem)
@@ -120,7 +119,7 @@ final class DefaultNetworkingService: NetworkServiceDelegate {
             throw DefaultNetworkingServiceError.failedResponse(response)
         }
     }
-    
+
     func deleteItem(id: String) async throws {
         guard let url = URL(string: "\(self.baseURL)/list/\(id)") else { return }
         var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
@@ -142,7 +141,7 @@ final class DefaultNetworkingService: NetworkServiceDelegate {
             throw DefaultNetworkingServiceError.failedResponse(response)
         }
     }
-    
+
     func updateList(items: [TodoItem]) async throws {
         var list: [ToDoItemNetworking] = []
         for item in items {

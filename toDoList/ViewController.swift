@@ -8,10 +8,14 @@
 import UIKit
 
 protocol ViewControllerDelegate: class {
-    func didSaveNote(_ data: TodoItem)
+    func didSaveNote()
 }
 
 class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
+
+    var tappedCell: TodoItem?
+
+    let context: AppDelegate? = nil
 
     var fileCache = FileCache()
 
@@ -110,39 +114,39 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
     }()
 
     let separator: UIView = {
-        let sep = UIView()
-        sep.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
-        return sep
+        let separator = UIView()
+        separator.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
+        return separator
     }()
 
     let separator1: UIView = {
-        let s1 = UIView()
-        s1.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
-        return s1
+        let separator1 = UIView()
+        separator1.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
+        return separator1
     }()
 
     let scrollView: UIScrollView = {
-        let sv = UIScrollView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.showsVerticalScrollIndicator = true
-        sv.contentInset = .zero
-        sv.alwaysBounceVertical = true
-        sv.isScrollEnabled = true
-        return sv
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.contentInset = .zero
+        scrollView.alwaysBounceVertical = true
+        scrollView.isScrollEnabled = true
+        return scrollView
     }()
 
     var flagCalendar = true
 
     let calendarView: UICalendarView = {
-        var cv = UICalendarView()
-        cv.translatesAutoresizingMaskIntoConstraints = false
-        cv.calendar = .current
-        cv.locale = .current
-        cv.fontDesign = .rounded
-        cv.calendar.firstWeekday = 2
-        cv.availableDateRange = DateInterval.init(start: .now, end: Date.distantFuture)
-        cv.layoutMargins = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-        return cv
+        var calendarView = UICalendarView()
+        calendarView.translatesAutoresizingMaskIntoConstraints = false
+        calendarView.calendar = .current
+        calendarView.locale = .current
+        calendarView.fontDesign = .rounded
+        calendarView.calendar.firstWeekday = 2
+        calendarView.availableDateRange = DateInterval.init(start: .now, end: Date.distantFuture)
+        calendarView.layoutMargins = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        return calendarView
     }()
 
     let switchButton: UISwitch = {
@@ -151,62 +155,62 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
     }()
 
     var imageImportant: UIImage {
-        let ii = UIImage(named: "imp")?.withRenderingMode(.alwaysOriginal)
-        return ii!
+        let imageImportant = UIImage(named: "imp")?.withRenderingMode(.alwaysOriginal)
+        return imageImportant!
     }
 
     var imageLow: UIImage {
-        let il = UIImage(named: "low")?.withRenderingMode(.alwaysOriginal)
-        return il!
+        let imageLow = UIImage(named: "low")?.withRenderingMode(.alwaysOriginal)
+        return imageLow!
     }
 
     let labelDate: UILabel = {
-        let ld = UILabel()
+        let labelDate = UILabel()
         let labelFrame = CGRect(x: 0, y: 0, width: 100, height: 23)
-        ld.frame = labelFrame
-        ld.font = UIFont(name: "HelveticaNeue", size: 15)
-        ld.textColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
-        return ld
+        labelDate.frame = labelFrame
+        labelDate.font = UIFont(name: "HelveticaNeue", size: 15)
+        labelDate.textColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
+        return labelDate
     }()
 
     let labelImportance: UILabel = {
-        let li = UILabel()
+        let labelImportance = UILabel()
         let labelFrame = CGRect(x: 0, y: 0, width: 100, height: 23)
-        li.frame = labelFrame
-        li.text = "Важность"
-        li.font = UIFont(name: "HelveticaNeue", size: 17)
-        li.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-        return li
+        labelImportance.frame = labelFrame
+        labelImportance.text = "Важность"
+        labelImportance.font = UIFont(name: "HelveticaNeue", size: 17)
+        labelImportance.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        return labelImportance
     }()
 
     let labelDeadline: UILabel = {
-        let ld = UILabel()
+        let labelDeadline = UILabel()
         let labelFrame = CGRect(x: 0, y: 0, width: 100, height: 23)
-        ld.frame = labelFrame
-        ld.text = "Сделать до"
-        ld.font = UIFont(name: "HelveticaNeue", size: 17)
-        ld.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-        return ld
+        labelDeadline.frame = labelFrame
+        labelDeadline.text = "Сделать до"
+        labelDeadline.font = UIFont(name: "HelveticaNeue", size: 17)
+        labelDeadline.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        return labelDeadline
     }()
 
     let labelTask: UILabel = {
-        let lt = UILabel()
+        let labelTask = UILabel()
         let labelFrame = CGRect(x: 0, y: 0, width: 100, height: 23)
-        lt.frame = labelFrame
-        lt.text = "Дело"
-        lt.font = UIFont(name: "HelveticaNeue-Bold", size: 17)
-        lt.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-        return lt
+        labelTask.frame = labelFrame
+        labelTask.text = "Дело"
+        labelTask.font = UIFont(name: "HelveticaNeue-Bold", size: 17)
+        labelTask.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        return labelTask
     }()
 
     let saveTask: UILabel = {
-        let st = UILabel()
+        let saveTask = UILabel()
         let labelFrame = CGRect(x: 0, y: 0, width: 100, height: 23)
-        st.frame = labelFrame
-        st.text = "Сохранить"
-        st.font = UIFont(name: "HelveticaNeue-Bold", size: 17)
-        st.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
-        return st
+        saveTask.frame = labelFrame
+        saveTask.text = "Сохранить"
+        saveTask.font = UIFont(name: "HelveticaNeue-Bold", size: 17)
+        saveTask.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
+        return saveTask
     }()
 
     let cancelTask: UIButton = {
@@ -218,30 +222,30 @@ class ViewController: UIViewController, UITextViewDelegate, UICalendarViewDelega
     }()
 
     var textView: UITextView = {
-        let tv = UITextView()
-        tv.frame = CGRect(origin: CGPoint(), size: CGSize(width: 330, height: 120))
-        tv.font = UIFont(name: "HelveticaNeue", size: 17)
-        tv.text = "Что надо сделать?"
-        tv.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
-        tv.isScrollEnabled = false
-        tv.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        tv.layer.cornerRadius = 16
-        tv.textContainer.lineFragmentPadding = 17
-        tv.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
-        tv.returnKeyType = .done
-        return tv
+        let textView = UITextView()
+        textView.frame = CGRect(origin: CGPoint(), size: CGSize(width: 330, height: 120))
+        textView.font = UIFont(name: "HelveticaNeue", size: 17)
+        textView.text = "Что надо сделать?"
+        textView.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
+        textView.isScrollEnabled = false
+        textView.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        textView.layer.cornerRadius = 16
+        textView.textContainer.lineFragmentPadding = 17
+        textView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
+        textView.returnKeyType = .done
+        return textView
     }()
 
     let deleteButton: UIButton = {
-        let db = UIButton()
-        db.layer.cornerRadius = 16
-        db.frame.size.height = 56
-        db.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        db.setTitle("Удалить", for: .normal)
-        db.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 17)
-        db.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3), for: .normal)
-        db.heightAnchor.constraint(equalToConstant: 56).isActive = true
-        return db
+        let deleteButton = UIButton()
+        deleteButton.layer.cornerRadius = 16
+        deleteButton.frame.size.height = 56
+        deleteButton.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        deleteButton.setTitle("Удалить", for: .normal)
+        deleteButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 17)
+        deleteButton.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3), for: .normal)
+        deleteButton.heightAnchor.constraint(equalToConstant: 56).isActive = true
+        return deleteButton
     }()
 
     let formatter: DateFormatter = {

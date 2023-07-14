@@ -28,6 +28,10 @@ extension ViewController {
         orientation()
 
         textView.delegate = self
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let context = appDelegate.persistentContainer.viewContext
+            fileCache.setContext(context: context)
+        }
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(labelTapped1))
         let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(labelTapped))

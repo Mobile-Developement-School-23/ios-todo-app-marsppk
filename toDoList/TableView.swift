@@ -34,11 +34,10 @@ extension ListOfTasksViewController: UITableViewDataSource, UITableViewDelegate 
         infoAction.image = UIImage(named: "info")
         let deleteAction = UIContextualAction(style: .destructive, title: nil) { (_, _, completionHandler) in
             let indexPath = IndexPath(row: indexPath.row, section: 0)
-            self.fileCache.remove(id: self.fileCache.items[indexPath.row].id)
-            self.fileCache.saveAll(name: "test1.json")
+            self.fileCache.deleteItemCoreData(deleteItem: self.fileCache.items[indexPath.row])
+            self.fileCache.getAllItemsCoreData()
             tableView.beginUpdates()
             tableView.deleteRows(at: [indexPath], with: .fade)
-            self.calculateTableViewHeight()
             tableView.endUpdates()
             completionHandler(true)
         }
@@ -54,11 +53,18 @@ extension ListOfTasksViewController: UITableViewDataSource, UITableViewDelegate 
             if var configuration = tableView.cellForRow(at: indexPath)?.defaultContentConfiguration() {
                 configuration.textProperties.numberOfLines = 3
                 let item = self.fileCache.items[indexPath.row]
-                self.fileCache.changeIsTaskComplete(id: self.fileCache.items[indexPath.row].id)
+                var newItem = self.fileCache.items[indexPath.row]
+                newItem.isTaskComplete = !newItem.isTaskComplete
+                self.fileCache.updateItemCoreData(newItem: newItem)
                 configuration.text = item.text
                 tableView.cellForRow(at: indexPath)?.accessoryView = self.imageEdit
                 configuration.image = self.imageDone
-                configuration.attributedText = NSAttributedString(string: item.text, attributes: [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue])
+                configuration.attributedText = NSAttributedString(
+                    string: item.text,
+                    attributes: [
+                        NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue
+                    ]
+                )
                 configuration.textProperties.color = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
                 tableView.cellForRow(at: indexPath)?.contentConfiguration = configuration
             }
@@ -154,25 +160,31 @@ extension ListOfTasksViewController: UITableViewDataSource, UITableViewDelegate 
             configuration.image = imageLowAndUsualIcon
         }
         if let deadline = item.deadline {
-            let imageAttachment = NSTextAttachment()
-            imageAttachment.image = UIImage(named: "calendar")
-            let attributedString = NSMutableAttributedString()
-            let imageString = NSAttributedString(attachment: imageAttachment)
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "ru_RU")
-            formatter.dateFormat = "dd MMMM"
-            let textString = NSAttributedString(string: formatter.string(from: deadline))
-            let fontSize: CGFloat = 15.0
-            attributedString.append(imageString)
-            attributedString.append(textString)
-            attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: fontSize),
-            range: NSRange(location: 0, length: attributedString.length))
-            let font = UIFont(name: "Helvetica-Bold", size: fontSize)
-            attributedString.addAttribute(.foregroundColor, value: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3), range: NSRange(location: 0, length: attributedString.length))
-            let imageBounds = CGRect(x: 0, y: -3, width: imageAttachment.image?.size.width ?? 0,
-            height: imageAttachment.image?.size.height ?? 0)
-            imageAttachment.bounds = imageBounds
-            configuration.secondaryAttributedText = attributedString
+            if item.isTaskComplete != true {
+                let imageAttachment = NSTextAttachment()
+                imageAttachment.image = UIImage(named: "calendar")
+                let attributedString = NSMutableAttributedString()
+                let imageString = NSAttributedString(attachment: imageAttachment)
+                let formatter = DateFormatter()
+                formatter.locale = Locale(identifier: "ru_RU")
+                formatter.dateFormat = "dd MMMM"
+                let textString = NSAttributedString(string: formatter.string(from: deadline))
+                let fontSize: CGFloat = 15.0
+                attributedString.append(imageString)
+                attributedString.append(textString)
+                attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: fontSize),
+                                              range: NSRange(location: 0, length: attributedString.length))
+                let font = UIFont(name: "Helvetica-Bold", size: fontSize)
+                attributedString.addAttribute(
+                    .foregroundColor,
+                    value: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3),
+                    range: NSRange(location: 0, length: attributedString.length)
+                )
+                let imageBounds = CGRect(x: 0, y: -3, width: imageAttachment.image?.size.width ?? 0,
+                                         height: imageAttachment.image?.size.height ?? 0)
+                imageAttachment.bounds = imageBounds
+                configuration.secondaryAttributedText = attributedString
+            }
         }
         cell.contentConfiguration = configuration
         cell.separatorInset = UIEdgeInsets(top: 0, left: 59.65, bottom: 0, right: 0)
@@ -205,6 +217,8 @@ extension ListOfTasksViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let modalVC = ViewController()
+        modalVC.tappedCell = fileCache.items[indexPath.row]
+
         let item = fileCache.items[indexPath.row]
         if item.text != "" {
             modalVC.textView.text = item.text
@@ -230,7 +244,7 @@ extension ListOfTasksViewController: UITableViewDataSource, UITableViewDelegate 
             modalVC.stackWithDateAndDeadline.addArrangedSubview(modalVC.labelDate)
         }
         modalVC.isTaskComplete = item.isTaskComplete
-        fileCache.remove(id: fileCache.items[indexPath.row].id)
+        fileCache.updateItemCoreData(newItem: fileCache.items[indexPath.row])
         modalVC.delegate = self
         present(modalVC, animated: true, completion: nil)
     }

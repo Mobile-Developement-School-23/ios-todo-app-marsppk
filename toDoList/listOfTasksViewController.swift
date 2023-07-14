@@ -13,32 +13,34 @@ protocol ListOfTasksViewControllerDelegate: AnyObject {
   }
 
 class ListOfTasksViewController: UIViewController {
-    
+
+    let context: AppDelegate? = nil
+
     static let deviceID = UIDevice.current.identifierForVendor!.uuidString
 
     weak var delegate: ListOfTasksViewControllerDelegate?
-    
+
     let networking = DefaultNetworkingService(token: "octactine")
 
     let countOfDoneTasks = 0
 
     let doneTasks: UILabel = {
-        let st = UILabel()
+        let doneTasks = UILabel()
         let labelFrame = CGRect(x: 0, y: 0, width: 100, height: 23)
-        st.frame = labelFrame
-        st.font = UIFont(name: "HelveticaNeue", size: 15)
-        st.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
-        return st
+        doneTasks.frame = labelFrame
+        doneTasks.font = UIFont(name: "HelveticaNeue", size: 15)
+        doneTasks.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
+        return doneTasks
     }()
 
     var imageImportant: UIImage {
-        let ii = UIImage(named: "imp")?.withRenderingMode(.alwaysOriginal)
-        return ii!
+        let imageImportant = UIImage(named: "imp")?.withRenderingMode(.alwaysOriginal)
+        return imageImportant!
     }
 
     var imageLow: UIImage {
-        let il = UIImage(named: "low")?.withRenderingMode(.alwaysOriginal)
-        return il!
+        let imageLow = UIImage(named: "low")?.withRenderingMode(.alwaysOriginal)
+        return imageLow!
     }
 
     let showButton: UIButton = {
@@ -68,54 +70,46 @@ class ListOfTasksViewController: UIViewController {
     }()
 
     var imagePlus: UIImage {
-        let ip = UIImage(named: "plus")?.withRenderingMode(.alwaysOriginal)
-        return ip!
+        let imagePlus = UIImage(named: "plus")?.withRenderingMode(.alwaysOriginal)
+        return imagePlus!
     }
 
     var imageLowAndUsualIcon: UIImage {
-        let ip = UIImage(named: "low and usual")?.withRenderingMode(.alwaysOriginal)
-        return ip!
+        let imageLowAndUsualIcon = UIImage(named: "low and usual")?.withRenderingMode(.alwaysOriginal)
+        return imageLowAndUsualIcon!
     }
 
     var imageImportantIcon: UIImage {
-        let ip = UIImage(named: "important")?.withRenderingMode(.alwaysOriginal)
-        return ip!
+        let imageImportantIcon = UIImage(named: "important")?.withRenderingMode(.alwaysOriginal)
+        return imageImportantIcon!
     }
 
     var imageDone: UIImage {
-        let ip = UIImage(named: "done")?.withRenderingMode(.alwaysOriginal)
-        return ip!
+        let imageDone = UIImage(named: "done")?.withRenderingMode(.alwaysOriginal)
+        return imageDone!
     }
 
     var imageEdit: UIImageView {
-        let ip = UIImage(named: "edit")?.withRenderingMode(.alwaysOriginal)
-        let image = UIImageView(image: ip)
+        let imageEdit = UIImage(named: "edit")?.withRenderingMode(.alwaysOriginal)
+        let image = UIImageView(image: imageEdit)
         return image
     }
 
     var contentHeight = CGFloat()
 
-    func calculateTableViewHeight() {
-        tableView.reloadData()
-        tableView.beginUpdates()
-        tableView.endUpdates()
-        tableView.layoutIfNeeded()
-        contentHeight = tableView.contentSize.height
-        DDLogDebug(contentHeight)
-        tableView.heightAnchor.constraint(equalToConstant: contentHeight + 1000).isActive = true
-    }
-
+    let tableView = UITableView(frame: .zero, style: .plain)
     var fileCache = FileCache()
 
-    let tableView = UITableView(frame: .zero, style: .plain)
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        networking.getList()
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let context = appDelegate.persistentContainer.viewContext
+            fileCache.setContext(context: context)
+        }
         let scrollView = UIScrollView(frame: view.bounds)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
-        fileCache.loadAll(name: "test1.json")
+        fileCache.getAllItemsCoreData()
         view.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.95, alpha: 1.0)
         navigationController?.navigationBar.layoutMargins = UIEdgeInsets(top: 0, left: 32, bottom: 0, right: 0)
         title = "Мои дела"
@@ -134,19 +128,17 @@ class ListOfTasksViewController: UIViewController {
 
         scrollView.addSubview(doneAndShowStack)
         scrollView.addSubview(tableView)
-        view.addSubview(scrollView)
         view.addSubview(buttonPlus)
 
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "\(UITableViewCell.self)")
-        tableView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+        tableView.frame = view.bounds
         tableView.dataSource = self
         tableView.delegate = self
         tableView.layer.cornerRadius = 16
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 56 // Оценочная высота ячейки
-        tableView.rowHeight = UITableView.automaticDimension
         tableView.isScrollEnabled = false
+        tableView.rowHeight = UITableView.automaticDimension // автоматически рассчитывает высоту ячейки
+        tableView.estimatedRowHeight = 50.0 // примерное значение высоты ячейки (может быть любым)
 
         NSLayoutConstraint.activate([
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
@@ -155,13 +147,14 @@ class ListOfTasksViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             doneAndShowStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             doneAndShowStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            doneAndShowStack.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            doneAndShowStack.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 18),
             doneAndShowStack.heightAnchor.constraint(equalToConstant: 16),
             tableView.topAnchor.constraint(equalTo: doneAndShowStack.bottomAnchor, constant: 12),
             tableView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             tableView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             tableView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            tableView.heightAnchor.constraint(equalToConstant: CGFloat(fileCache.items.count + 1) * 98),
             buttonPlus.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             buttonPlus.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54)
         ])
@@ -169,13 +162,12 @@ class ListOfTasksViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        calculateTableViewHeight()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
-    
+
     @IBAction func openModalScreen(_ sender: Any) {
         let modalVC = ViewController()
         modalVC.delegate = self
@@ -185,10 +177,8 @@ class ListOfTasksViewController: UIViewController {
 }
 
 extension ListOfTasksViewController: ViewControllerDelegate {
-    func didSaveNote(_ data: TodoItem) {
-        fileCache.add(item: data)
-        fileCache.saveAll(name: "test1.json")
+    func didSaveNote() {
+        fileCache.getAllItemsCoreData()
         tableView.reloadData()
-        calculateTableViewHeight()
     }
 }

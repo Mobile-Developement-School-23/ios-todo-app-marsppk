@@ -10,9 +10,9 @@ import UIKit
 extension ViewController {
     @IBAction func buttonTapped(sender: UIButton) {
         if deleteButton.titleLabel?.textColor == UIColor(red: 1.0, green: 0.23, blue: 0.19, alpha: 1.0) {
-            // fileCache.remove(id: toDoitem1.id)
-            fileCache.saveAll(name: "test1.json")
-
+            if let cell = tappedCell {
+                fileCache.deleteItemCoreData(deleteItem: cell)
+            }
             textView.text = ""
             importance = 0
             switchButton.isOn = false
@@ -44,6 +44,7 @@ extension ViewController {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 verticalStack1.addArrangedSubview($0)
             }
+            delegate?.didSaveNote()
             dismiss(animated: true, completion: nil)
         }
     }
