@@ -22,6 +22,11 @@ extension ViewController {
         return UIInterfaceOrientationMask.portrait
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         background()
@@ -32,6 +37,9 @@ extension ViewController {
             let context = appDelegate.persistentContainer.viewContext
             fileCache.setContext(context: context)
         }
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(labelTapped1))
         let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
@@ -90,6 +98,21 @@ extension ViewController {
 
         setupConstrains()
     }
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        guard let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+
 }
 
 extension UIViewController {
